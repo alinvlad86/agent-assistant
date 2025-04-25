@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Assistant</title>
+</head>
+<body style="font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto;">
+  <h1>Agent Assistant</h1>
+  <input type="text" id="searchInput" placeholder="Scrie situația clientului..." style="width: 100%; padding: 10px; font-size: 16px;">
+  <button onclick="searchKeyword()" style="margin-top: 10px; padding: 10px 20px; font-size: 16px;">Caută</button>
+
+  <div id="results" style="margin-top: 30px;"></div>
+
+  <script>
+    async function searchKeyword() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<p>Caut...</p>';
+
+      // Exemplu simplu de date locale (simulăm Google Sheets)
+      const data = [
+        { keyword: 'client critic', macro: 'Îmi pare rău pentru întârziere, verific imediat.', link: 'https://shelf-link-ritardo.com' },
+        { keyword: 'client critic', macro: 'Îmi pare rău pentru comanda greșită, inițiez verificare.', link: 'https://shelf-link-rovesciato.com' },
+        { keyword: 'gusto personale', macro: 'Reamintesc clientului că poate alege preferințele personale.', link: '' }
+      ];
+
+      const filtered = data.filter(row => row.keyword.toLowerCase().includes(query) || query.includes(row.keyword.toLowerCase()));
+
+      if (filtered.length === 0) {
+        resultsDiv.innerHTML = '<p>Nu am găsit nicio soluție.</p>';
+        return;
+      }
+
+      resultsDiv.innerHTML = '';
+      filtered.forEach(result => {
+        const div = document.createElement('div');
+        div.style.marginBottom = '20px';
+        div.innerHTML = `<strong>Macro:</strong> ${result.macro}<br>` +
+                        (result.link ? `<a href="${result.link}" target="_blank">Deschide link</a>` : '');
+        resultsDiv.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>
