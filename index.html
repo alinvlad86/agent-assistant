@@ -17,7 +17,8 @@
 
     async function loadData() {
       const sheetId = '11krFMZ7XcwX4KyXX7l1kDcNvBsqp4J1Nmu6O-YFs8aU';
-      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
+      const gid = '1734701742';
+      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&gid=${gid}`;
       const response = await fetch(url);
       const text = await response.text();
       const json = JSON.parse(text.substr(47).slice(0, -2));
