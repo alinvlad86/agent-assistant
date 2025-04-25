@@ -17,14 +17,17 @@
 
     async function loadData() {
       const sheetId = '11krFMZ7XcwX4KyXX7l1kDcNvBsqp4J1Nmu6O-YFs8aU';
-      const sheetGid = '0';
-      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${sheetGid}`;
-
+      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json`;
       const response = await fetch(url);
-      const csvText = await response.text();
-      const rows = csvText.split('\n').map(row => row.split(','));
-      rows.shift(); // eliminăm header-ul
-      data = rows.map(row => ({ keyword: row[0], title: row[1], macro: row[2], link: row[3] }));
+      const text = await response.text();
+      const json = JSON.parse(text.substr(47).slice(0, -2));
+
+      data = json.table.rows.map(row => ({
+        keyword: row.c[0] ? row.c[0].v : '',
+        title: row.c[1] ? row.c[1].v : '',
+        macro: row.c[2] ? row.c[2].v : '',
+        link: row.c[3] ? row.c[3].v : ''
+      }));
     }
 
     async function searchKeyword() {
