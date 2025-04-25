@@ -13,17 +13,28 @@
   <div id="results" style="margin-top: 30px;"></div>
 
   <script>
+    let data = [];
+
+    async function loadData() {
+      const sheetId = '11krFMZ7XcwX4KyXX7l1kDcNvBsqp4J1Nmu6O-YFs8aU';
+      const sheetGid = '0';
+      const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${sheetGid}`;
+
+      const response = await fetch(url);
+      const csvText = await response.text();
+      const rows = csvText.split('\n').map(row => row.split(','));
+      rows.shift(); // eliminăm header-ul
+      data = rows.map(row => ({ keyword: row[0], title: row[1], macro: row[2], link: row[3] }));
+    }
+
     async function searchKeyword() {
       const query = document.getElementById('searchInput').value.toLowerCase();
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = '<p>Caut...</p>';
 
-      // Exemplu simplu de date locale (simulăm Google Sheets)
-      const data = [
-        { keyword: 'client critic', macro: 'Îmi pare rău pentru întârziere, verific imediat.', link: 'https://shelf-link-ritardo.com' },
-        { keyword: 'client critic', macro: 'Îmi pare rău pentru comanda greșită, inițiez verificare.', link: 'https://shelf-link-rovesciato.com' },
-        { keyword: 'gusto personale', macro: 'Reamintesc clientului că poate alege preferințele personale.', link: '' }
-      ];
+      if (data.length === 0) {
+        await loadData();
+      }
 
       const filtered = data.filter(row => row.keyword.toLowerCase().includes(query) || query.includes(row.keyword.toLowerCase()));
 
